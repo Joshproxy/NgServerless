@@ -1,0 +1,7 @@
+.dataRow {
+    cursor: pointer;  
+}
+
+.dataRow:hover {
+ background-color: lightblue; 
+}

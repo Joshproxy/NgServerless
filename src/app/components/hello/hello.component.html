@@ -1,0 +1,7 @@
+<h2>Hello [Dynamic]</h2>
+
+<p>This is a simple example of an Angular 2 input component.</p>
+
+<p>{{ hello }} <strong>{{ blank }}!</strong></p>
+
+<input #blankInput (keyup)="onKey(blankInput.value)" value="{{blank}}"/>

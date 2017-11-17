@@ -1,0 +1,29 @@
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+<input type="button" (click)="loadDataViaObservable()" value="Refresh"/>
+<input type="button" (click)="createWeather()" value="Create Weather Forecast"/>
+<p *ngIf="!forecastsPromise"><em>Loading...</em></p>
+
+<h3>Promises</h3>
+<p>Promise</p>
+<table class='table' *ngIf="forecastsPromise">
+    <thead>
+    <tr>
+        <th>Date</th>
+        <th>Temp. (C)</th>
+        <th>Temp. (F)</th>
+        <th>Summary</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let forecast of forecastsPromise" (click)="loadSingle(forecast)" class="dataRow">
+        <td>{{ forecast.dateFormatted }}</td>
+        <td>{{ forecast.temperatureC }}</td>
+        <td>{{ forecast.temperatureF }}</td>
+        <td>{{ forecast.summary }}</td>
+    </tr>
+    </tbody>
+</table>
+
+

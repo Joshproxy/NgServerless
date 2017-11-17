@@ -1,0 +1,21 @@
+<div class='navbar-collapse collapse'>
+    <ul class='nav navbar-nav'>
+        <li [routerLinkActive]="['link-active']" style="border-right: black solid 1px">
+            <a [routerLink]="['./hello', 'World']">Hello World!</a>
+        </li>
+        <li [routerLinkActive]="['link-active']" style="border-right: black solid 1px;">
+            <a [routerLink]="['./hello', 'Nurse']">Hello Nurse!</a>
+        </li>
+        <li [routerLinkActive]="['link-active']" style="border-right: black solid 1px; padding-right: 15px;">
+            <a [routerLink]="['./hello', helloBlank]" style="display: inline-block; padding-right: 0">Dynamic</a>
+            <input #blankInput [(ngModel)]="helloBlank" style="display: inline-block; width: 50px" />!
+        </li>
+        <li [routerLinkActive]="['link-active']" style="border-right: black solid 1px; padding-right: 15px; cursor: pointer">
+            <a (click)="onAlternativeClick()" style="display: inline-block; padding-right: 0">Nav via code</a>
+            <input #blankInput [(ngModel)]="helloBlank" style="display: inline-block; width: 50px" />!
+        </li>
+        <li [routerLinkActive]="['link-active']">
+            <a [routerLink]="['./multiplier']">Multiplier</a>
+        </li>
+    </ul>
+</div>
