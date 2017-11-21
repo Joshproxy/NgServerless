@@ -5,6 +5,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/share';
 
 @Component({
+    // tslint:disable-next-line:component-selector
     selector: 'fetchdata',
     template: require('./fetchdata.component.html'),
     styleUrls: ['./fetchdata.component.css']
@@ -12,58 +13,24 @@ import 'rxjs/add/operator/share';
 export class FetchDataComponent {
     // Promise params
     public forecastsPromise: WeatherForecast[] = [];
-    public forecastsPromiseAsnyc: Promise<WeatherForecast[]> = new Promise(() => []);
-
-    // Observable params
-    public forecastsObservable: WeatherForecast[] = [];
-    public forecastsObservableAsnyc: Observable<WeatherForecast[]>;
 
     constructor(private dataService: FetchDataService) {
-        this.loadData(true);
+        this.loadSingle();
     }
 
-    loadDataViaPromise = (useCache: boolean = false) => {
-
-        // Async promise
-        this.forecastsPromiseAsnyc = this.dataService.fetchDataPromise(useCache);
-
-        // Promise
-        this.dataService.fetchDataPromise(useCache)
-            .then((data: WeatherForecast[]) => {
-                this.forecastsPromise = data;
-            });
-    };
-
-    loadDataViaObservable = (useCache: boolean = false) => {
-        // Async Observable
-        this.forecastsObservableAsnyc = this.dataService.fetchDataObservable(useCache);
-
-        // Observable
-        this.dataService.fetchDataObservable(useCache)
-            .subscribe((data: WeatherForecast[]) => {
-                this.forecastsObservable = data;
-            });
-
-    };
-
-    loadData = (useCache: boolean = false) => {
-        this.loadDataViaPromise(useCache);
-        this.loadDataViaObservable(useCache);
-    };
-
-    loadSingle = (weather: WeatherForecast) => {
+    loadSingle = () => {
         this.dataService
-            .getData(weather.id)
-            .then((weather: WeatherForecast) => {
-                alert(JSON.stringify(weather));
+            .getData()
+            .then((weatherForecast: WeatherForecast) => {
+                this.forecastsPromise.push(weatherForecast);
             });
     }
 
     createWeather = () => {
-        var n = Math.floor(Math.random() * 100) + 1;
-        var d = new Date(Date.now().valueOf());
+        const n = Math.floor(Math.random() * 100) + 1;
+        const d = new Date(Date.now().valueOf());
         d.setDate(d.getDate() + n);
-        var forecast = new WeatherForecast();
+        const forecast = new WeatherForecast();
         forecast.id = n;
         forecast.dateFormatted = d.toLocaleDateString();
         forecast.temperatureF = n;

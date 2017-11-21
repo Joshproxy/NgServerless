@@ -1,7 +1,7 @@
 <h1>Weather forecast</h1>
 
 <p>This component demonstrates fetching data from the server.</p>
-<input type="button" (click)="loadDataViaObservable()" value="Refresh"/>
+<input type="button" (click)="loadSingle()" value="Refresh"/>
 <input type="button" (click)="createWeather()" value="Create Weather Forecast"/>
 <p *ngIf="!forecastsPromise"><em>Loading...</em></p>
 

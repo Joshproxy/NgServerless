@@ -9,49 +9,35 @@ import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
+import { ConfigurationService } from '../../configuration.service';
+import { HttpBaseService } from '../../shared/httpbase.service';
 
 @Injectable()
-export class FetchDataService {
+export class FetchDataService extends HttpBaseService {
 
     private fetchUrl: string = null;
     private cache: WeatherForecast[] = [];
 
-    constructor(private http: HttpClient,
+    constructor(http: HttpClient, private configurationService: ConfigurationService,
         @Inject('ORIGIN_URL') originUrl: string) {
         // The originUrl param must be injected for server-side pre-compilation
         // Without it, this would work if navigated to client-side, but would fail
         // if it were the first component pre-compiled on the server.
-        //this.fetchUrl = originUrl + '/api/SampleData/WeatherForecasts';
-        this.fetchUrl = 'https://mvhzp27oli.execute-api.us-east-2.amazonaws.com/test/sampleweather';
-    }
-
-    fetchDataObservable = (useCache: boolean = false): Observable<WeatherForecast[]> => {
-        if (useCache && this.cache.length > 0) {
-            return Observable.of(this.cache);
-            //return Observable.from(this.cache);
-        } else {
-            return this.http
-                .get(this.fetchUrl)
-                .map(this.extractData)
-                .catch(this.handleError);
-        }
+        // this.fetchUrl = originUrl + '/api/SampleData/WeatherForecasts';
+        super(http, configurationService.fetchUrl);
     }
 
     fetchDataPromise = (useCache: boolean = false): Promise<WeatherForecast[]> => {
         if (useCache && this.cache.length > 0) {
             return Promise.resolve(this.cache);
         }
-        return this.http
-            .get<ISampleWeather>(this.fetchUrl)
-            .toPromise()
+        return this.httpGet()
             .then(this.extractData)
             .catch(this.handleError);
     }
 
-    getData = (id: number): Promise<WeatherForecast> => {
-        return <Promise<WeatherForecast>>this.http
-            .get<IGetWeather>(this.fetchUrl, { params: { "id": id.toString() } })
-            .toPromise()
+    getData = (): Promise<WeatherForecast> => {
+        return <Promise<WeatherForecast>>this.httpGet()
             .then(this.extractSingleData)
             .catch(this.handleError);
     }
@@ -71,11 +57,8 @@ export class FetchDataService {
     }
 
     insertData = (forecast: WeatherForecast) => {
-        var iWeatherForecast = forecast.toIWeatherForecast();
-        this.http
-            .put(this.fetchUrl, iWeatherForecast)
-            .toPromise()
-            .then();
+        const iWeatherForecast = forecast.toIWeatherForecast();
+        this.httpPut(iWeatherForecast);
     }
 }
 
@@ -97,13 +80,13 @@ export class WeatherForecast {
     }
 
     public toIWeatherForecast = () => {
-        var iWeather = <IWeatherForecast>{
+        const iWeather = <IWeatherForecast>{
             DataId: this.id,
             Summary: this.summary,
             Date: this.dateFormatted,
             TempC: this.temperatureC,
             TempF: this.temperatureF
-        }
+        };
         return iWeather;
     }
 }
@@ -117,11 +100,11 @@ export interface IWeatherForecast {
 }
 
 interface IGetWeather {
-    Item: IWeatherForecast
+    Item: IWeatherForecast;
 }
 
 interface ISampleWeather {
-    Items: IWeatherForecast[],
+    Items: IWeatherForecast[];
     Count: number;
     ScannedCount: number;
 }
