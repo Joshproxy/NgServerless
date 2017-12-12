@@ -14,7 +14,6 @@ export class AuthGuardService implements CanActivate {
         private configurationService: ConfigurationService) { }
 
     canActivate = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean => {
-        debugger;
         if (route.queryParams.code !== undefined) {
             this.authService
                 .authenticate(this.authenticationHandler, true);
