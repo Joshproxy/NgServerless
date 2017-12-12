@@ -10,32 +10,30 @@ import { ConfigurationService } from '../configuration.service';
 @Injectable()
 export class AuthGuardService implements CanActivate {
 
-    private userToken = '';
-
     constructor(private authService: AuthenticationService, private router: Router,
         private configurationService: ConfigurationService) { }
 
     canActivate = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean => {
-        const fragment = this.parseFragment(route.fragment);
-
-        this.userToken = fragment.id_token;
-        return this.checkLogin();
-    }
-
-    checkLogin = (): boolean => {
-        if (this.authService.authenticated()) { return true; }
-
-        this.authService
-            .authenticate(this.userToken)
-            .then(authenticated => {
-                if (authenticated) {
-                    this.router.navigate(['/home']);
-                } else {
-                    window.location.href = this.configurationService.loginUrl;
-                }
-            });
+        debugger;
+        if (route.queryParams.code !== undefined) {
+            this.authService
+                .authenticate(this.authenticationHandler, true);
+        } else if (this.authService.authenticated) {
+            return true;
+        } else {
+            this.authService
+                .authenticate(this.authenticationHandler, false);
+        }
 
         return false;
+    }
+
+    private authenticationHandler = (authenticated: boolean) => {
+        if (authenticated) {
+            this.router.navigate(['/home']);
+        } else {
+            window.location.href = this.configurationService.loginUrl;
+        }
     }
 
     parseFragment = (fragmentWhole: string): any => {

@@ -10,6 +10,7 @@ import { ConfigurationService } from './configuration.service';
 import { AuthenticationService } from './authentication/authentication.service';
 import { AuthGuardService } from './authentication/authguard.service';
 import { HttpBaseService } from './shared/httpbase.service';
+import { UserInfoService } from './authentication/userInfo.service';
 
 export const sharedConfig: NgModule = {
     bootstrap: [AppComponent],
@@ -27,6 +28,7 @@ export const sharedConfig: NgModule = {
         FetchDataService,
         ConfigurationService,
         AuthenticationService,
-        AuthGuardService
+        AuthGuardService,
+        UserInfoService
     ]
 };

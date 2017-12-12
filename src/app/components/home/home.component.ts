@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthenticationService } from '../../authentication/authentication.service';
-
+import { UserInfoService } from '../../authentication/userInfo.service';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -11,8 +10,8 @@ export class HomeComponent {
 
     public username = 'Username not found';
 
-    constructor(private authenticationService: AuthenticationService) {
-        this.authenticationService
+    constructor(private userInfoService: UserInfoService) {
+        this.userInfoService
             .getUserData()
             .then(userData => this.username = userData.name);
     }

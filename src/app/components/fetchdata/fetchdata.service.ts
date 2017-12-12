@@ -11,6 +11,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import { ConfigurationService } from '../../configuration.service';
 import { HttpBaseService } from '../../shared/httpbase.service';
+import { AuthenticationService } from '../../authentication/authentication.service';
 
 @Injectable()
 export class FetchDataService extends HttpBaseService {
@@ -19,21 +20,13 @@ export class FetchDataService extends HttpBaseService {
     private cache: WeatherForecast[] = [];
 
     constructor(http: HttpClient, private configurationService: ConfigurationService,
+        authenticationService: AuthenticationService,
         @Inject('ORIGIN_URL') originUrl: string) {
         // The originUrl param must be injected for server-side pre-compilation
         // Without it, this would work if navigated to client-side, but would fail
         // if it were the first component pre-compiled on the server.
         // this.fetchUrl = originUrl + '/api/SampleData/WeatherForecasts';
-        super(http, configurationService.fetchUrl);
-    }
-
-    fetchDataPromise = (useCache: boolean = false): Promise<WeatherForecast[]> => {
-        if (useCache && this.cache.length > 0) {
-            return Promise.resolve(this.cache);
-        }
-        return this.httpGet()
-            .then(this.extractData)
-            .catch(this.handleError);
+        super(http, authenticationService, configurationService.fetchUrl);
     }
 
     getData = (): Promise<WeatherForecast> => {
